@@ -47,8 +47,7 @@ contract HikyakuProtocol {
         // If the mailAddress is already resolved:
         address resolvedAddress = records[requester][mailAddress];
         if (resolvedAddress != address(0)) {
-            // Do nothing because the address is already resolved.
-            return;
+            revert();
         }
     
         // If the mailAddress is NOT resolved yet.
