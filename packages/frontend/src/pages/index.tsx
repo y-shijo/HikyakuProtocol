@@ -2,7 +2,6 @@ import { HomePageInput } from '@components/home/HomePageInput'
 import { HomePageTitle } from '@components/home/HomePageTitle'
 import { HomeTopBar } from '@components/home/HomeTopBar'
 import { CenterBody } from '@components/layout/CenterBody'
-import { GreeterContractInteractions } from '@components/web3/GreeterContractInteractions'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import type { NextPage } from 'next'
 import 'twin.macro'
@@ -22,8 +21,6 @@ const HomePage: NextPage = () => {
         <HomePageInput />
 
         <div tw="my-14 w-14 bg-gray-800 h-[2px]" />
-        {/* Greeter.sol Contract Interactions */}
-        <GreeterContractInteractions />
       </CenterBody>
     </>
   )
