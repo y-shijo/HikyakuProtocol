@@ -23,7 +23,6 @@ Router.events.on('routeChangeError', () => NProgress.done())
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      {/* TODO SEO */}
       <DefaultSeo
         dangerouslySetAllPagesToNoFollow={!env.isProduction}
         dangerouslySetAllPagesToNoIndex={!env.isProduction}
@@ -37,14 +36,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           site_name: 'HiKyaku',
           images: [
             {
-              url: `${env.url}/images/cover.jpg`, // TODO
+              url: `${env.url}/images/cover.jpg`,
               width: 1200,
               height: 670,
             },
           ],
         }}
         twitter={{
-          handle: '@hikyaku', // TODO
+          handle: '@hikyaku',
         }}
       />
 
