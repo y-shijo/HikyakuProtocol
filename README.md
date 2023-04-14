@@ -13,8 +13,8 @@ By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04
 **Table of Contents:**
 
 1. [The Stack](#the-stack)
-2. [Projects using it](#projects-using-it)
-3. [Getting Started](#getting-started)
+2. [Protocol Spec](#protocol-spec)
+3. [Live demo](#live-demo)
 4. [Development](#development)
    1. [Quickstart](#quickstart)
 5. [Deployment](#deployment)
@@ -34,15 +34,48 @@ By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04
 - Misc:
   - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
 
-## Projects using it
+## Protocol Spec
 
-Below you find a few live projects that use ETHathon, a variation of it, or have a similar setup setup that inspired it:
+### 1. Register email address
 
-- [Yieldgate](https://github.com/yieldgate/yieldgate) – Hackathon project that built a patreon-like platform to support projects with yield.
-- [Debate3](http://debate3.xyz/) – Hackathon project that built discourse-like forums for DAOs.
-- [Stablecoins.wtf](https://stablecoins.wtf/) (frontend only) – Crypto Stablecoin Dashboard & Resources
+When a user try to resolve an email address, the user's email address is encrypted by LitProtocol and stored in the contract. At this time, the user can select the notifier provider from the list of providers registered in the contract.(Currently, only our first-party provider is available.)
 
-## Getting Started
+### 2. Send email
+
+The notifier provider sends an email to the user's email address. The email contains a url to the web3 address resolution page.
+
+The url SHOULD be in the following format.
+
+https://hikyaku-protocol.vercel.app/resolve?k={signed_jwt_token}
+
+The JWT token is signed by the notifier provider's private key and the format is following:
+
+```json
+{
+  "iss": "https://hikyaku-protocol-notifier.vercel.app",
+  "sub": "ken@example.com",
+  "type": "email",
+  "exp": 1620000000
+}
+```
+
+The issuer SHOULD publish the public key of the private key used to sign the JWT token. The path of the public key SHOULD be in the following format `/.well-known/hikyaku-configuration`.
+
+### 3. Resolve web3 address
+
+When the user opens the url in the email, the user can register his/her web3 address. The user's web3 address is encrypted by LitProtocol and stored in the contract.
+
+### 4. Get web3 address
+
+Once the user's web3 address is registered, the email address can be resolved to the web3 address by calling the `getResolvedAddress` function of the contract.
+
+## Live demo
+
+https://hikyaku-protocol.vercel.app/
+
+## Development
+
+### Quickstart
 
 ```bash
 # Install pnpm
@@ -56,10 +89,6 @@ pnpm install
 cp packages/frontend/.env.local.example packages/frontend/.env.local
 cp packages/contracts/.env.example packages/contracts/.env
 ```
-
-## Development
-
-### Quickstart
 
 ```bash
 # Generate contract-types, start local hardhat node, and start frontend with turborepo
