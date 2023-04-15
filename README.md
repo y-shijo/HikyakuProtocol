@@ -1,8 +1,6 @@
-# HiKyaku Protocol – Email 🤝 web3 address
+# HiKyaku Protocol
 
-<img src="packages/frontend/public/images/mix-cover.jpg" width="800" height="223" alt="Cover Image" />
-
----
+<img src="packages/frontend/public/images/cover.jpg" alt="Cover Image" />
 
 Resolve any email address to web3 address.
 
