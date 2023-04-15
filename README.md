@@ -1,43 +1,41 @@
-# HiKyaku Protocol – Email 🤝 web3 address
+<!--img src="packages/frontend/public/images/logo.png" width="44" alt="Logo" style="border-radius:16px;" /-->
 
-<img src="packages/frontend/public/images/mix-cover.jpg" width="800" height="223" alt="Cover Image" />
+# HiKyaku Protocol
 
----
+<img src="packages/frontend/public/images/cover.jpg" alt="Cover Image" />
 
 Resolve any email address to web3 address.
 
 By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04), Tei
 
+### Live demo
+
+https://hikyaku-protocol.vercel.app/
+
 ---
 
 **Table of Contents:**
 
-- [HiKyaku Protocol – Email 🤝 web3 address](#hikyaku-protocol--email--web3-address)
-  - [The Stack](#the-stack)
+- [HiKyaku Protocol](#hikyaku-protocol)
+    - [Live demo](#live-demo)
+  - [What problem we addressed](#what-problem-we-addressed)
   - [Protocol Spec](#protocol-spec)
     - [1. Register email address](#1-register-email-address)
     - [2. Send email](#2-send-email)
     - [3. Resolve web3 address](#3-resolve-web3-address)
     - [4. Get web3 address](#4-get-web3-address)
-  - [Live demo](#live-demo)
+  - [The Stack](#the-stack)
   - [Development](#development)
     - [Quickstart](#quickstart)
-  - [Deployment](#deployment)
+    - [Deployment](#deployment)
 
 ---
 
-## The Stack
+## What problem we addressed
 
-- Package-Manager: `pnpm`
-- Monorepo Tooling: `turborepo`
-- Smart Contract Development: `hardhat`
-  - Deploy & Address-Export: `hardhat-deploy`
-  - Typescript-Types: `typechain`
-- Frontend: `next`
-  - Contract Interactions: `wagmi`, `rainbowkit`
-  - Styling: `chakra`, `tailwindcss`, `twin.macro`, `emotion`
-- Misc:
-  - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
+Currently, there are many services that require users to register their web3 address. However, it is difficult for users to register their web3 address because they need to know how to use MetaMask or other wallet applications. In addition, it is difficult for users to remember their web3 address.
+
+---
 
 ## Protocol Spec
 
@@ -76,9 +74,20 @@ When the user opens the url in the email, the user can register his/her web3 add
 
 Once the user's web3 address is registered, the email address can be resolved to the web3 address by calling the `getResolvedAddress` function of the contract.
 
-## Live demo
+---
 
-https://hikyaku-protocol.vercel.app/
+## The Stack
+
+- Package-Manager: `pnpm`
+- Monorepo Tooling: `turborepo`
+- Smart Contract Development: `hardhat`
+  - Deploy & Address-Export: `hardhat-deploy`
+  - Typescript-Types: `typechain`
+- Frontend: `next`
+  - Contract Interactions: `wagmi`, `rainbowkit`
+  - Styling: `chakra`, `tailwindcss`, `twin.macro`, `emotion`
+- Misc:
+  - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
 
 ## Development
 
@@ -106,7 +115,7 @@ pnpm dev
 pnpm frontend:dev
 ```
 
-## Deployment
+### Deployment
 
 Setting up a deployment via Vercel is pretty straightforward as build settings are preconfigured in `vercel.json`. To get started, press the **Deploy** button and enter the default environment variables listed below.
 
