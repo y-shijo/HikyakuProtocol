@@ -1,3 +1,5 @@
+<!--img src="packages/frontend/public/images/logo.png" width="44" alt="Logo" style="border-radius:16px;" /-->
+
 # HiKyaku Protocol
 
 <img src="packages/frontend/public/images/cover.jpg" alt="Cover Image" />
