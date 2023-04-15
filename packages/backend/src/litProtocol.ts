@@ -36,4 +36,15 @@ async function getAddressFromPkp(tokenId: any) {
     return address
 }
 
-export { mintPkP, getAddressFromPkp }
+async function transferPkpToken(tokenId: any, toAddress: any) {
+    console.log(`transferPkpToken: transfer token (${tokenId}) to ${toAddress}`)
+    const litContracts = await getLitContract()
+
+    const fromAddress = await litContracts.signer.getAddress()
+    const tx = await litContracts.pkpNftContract.write.transferFrom(fromAddress, toAddress, tokenId)
+    await tx.wait()
+
+    console.log(`transferPkpToken: finished transfer`)
+}
+
+export { mintPkP, getAddressFromPkp, transferPkpToken }

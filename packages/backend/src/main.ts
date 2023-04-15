@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import HIKYAKU_ABI from './abi/HikyakuProtocol.json'
 import { sendMail } from './emailJs'
 import { createJwt } from './jwt'
-import { getAddressFromPkp, mintPkP } from './litProtocol'
+import { getAddressFromPkp, mintPkP, transferPkpToken } from './litProtocol'
 
 require('dotenv').config()
 
@@ -70,6 +70,8 @@ function instantiateHikyakuContract(provider: ethers.providers.JsonRpcProvider) 
 }
 
 async function main() {
+    let pkpTokenIdMapper: any = {}
+
     console.log('Main: Started')
 
     // Initialize Provider
@@ -82,15 +84,13 @@ async function main() {
     const hikyakuContract = instantiateHikyakuContract(provider)
 
     // Event to be subscrived
-    const eventQuery = hikyakuContract.filters.ResolveRequested()
+    const resolveRequestedEvent = hikyakuContract.filters.ResolveRequested()
 
-    //
-    const testEventQuery = await hikyakuContract.queryFilter(eventQuery)
-    console.log(eventQuery)
-    console.log(testEventQuery)
+    // const testEventQuery = await hikyakuContract.queryFilter(resolveRequestedEvent)
+    // console.log(testEventQuery)
 
-    // Start Event Subscription
-    hikyakuContract.on(eventQuery, async (requester, mailAddress, name, message) => {
+    // Start Event Subscription for resolveRequestedEvent
+    hikyakuContract.on(resolveRequestedEvent, async (requester, mailAddress, name, message) => {
         console.log(
             `Request from ${requester} (name: ${name}) to ${mailAddress} with message ${message}`,
         )
@@ -107,6 +107,10 @@ async function main() {
         const pkpTokenId = await mintPkP()
         const tempWalletAddress = await getAddressFromPkp(pkpTokenId)
 
+        // Save pkpTokenId
+        const key = ((requester as string) + mailAddress) as string
+        pkpTokenIdMapper[key] = pkpTokenId
+
         // Register pkpAddress
         console.log(`Registering pkpAddress...`)
         hikyakuContract
@@ -115,13 +119,28 @@ async function main() {
         console.log(`pkpAddress Registered!`)
 
         // create JWT
-        const signedJwt = createJwt(mailAddress)
+        const signedJwt = createJwt(mailAddress, requester)
 
         // send Email
         const link = `https://hikyaku-protocol.vercel.app/resolve?k=${signedJwt}`
         sendMail(mailAddress, requester, link, name, message)
 
         console.log(`Event Processing Fisnihed`)
+    })
+
+    // Event to be subscrived
+    const registeredEvent = hikyakuContract.filters.Registered()
+
+    // Start Event Subscription for resolveRequestedEvent
+    hikyakuContract.on(registeredEvent, async (requester, mailAddress, resolvedAddress) => {
+        console.log(`Resolved from ${requester} for ${mailAddress} as ${resolvedAddress}`)
+
+        // Transfer pkpToken
+        const key = ((requester as string) + mailAddress) as string
+        const pkpTokenId = pkpTokenIdMapper[key]
+        if (pkpTokenId) {
+            transferPkpToken(pkpTokenId, resolvedAddress)
+        }
     })
 
     console.log(`Event Subscribing...`)
