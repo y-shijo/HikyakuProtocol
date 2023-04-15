@@ -46,18 +46,20 @@ const ResolvePage = ({
   const id = givenId ?? (Array.isArray(router.query.id) ? router.query.id[0] : router.query.id)
   const k = Array.isArray(router.query.k) ? router.query.k[0] : router.query.k
 
+  const zeroAddress = '0x0000000000000000000000000000000000000000'
+
   useEffect(() => {
     ;(async () => {
       if (!id || !signer || !contracts) return
       const deployedAddress = contracts.HikyakuProtocol.address
       const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
       try {
-        const owner = await contract.getResolvedAddress(id)
-        setResolvedAddress(owner ?? null)
+        const owner = await contract.getResolvedAddress(await signer.getAddress(), id)
+        console.log(`Resolved Address: ${owner}`)
+        setResolvedAddress(owner == zeroAddress ? null : owner)
       } catch (e) {
         console.error(e)
       }
-      setResolvedAddress(null)
       setIsResolving(false)
     })()
   }, [signer, contracts])
@@ -126,8 +128,10 @@ const ResolvePage = ({
                 </CardBody>
               </Card>
             </Tabs>
-          ) : (
+          ) : !resolvedAddress ? (
             <RequestResolveContractInteractions id={id}></RequestResolveContractInteractions>
+          ) : (
+            <></>
           ))}
       </CenterBody>
     </>

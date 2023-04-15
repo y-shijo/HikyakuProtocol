@@ -28,6 +28,25 @@ function getProvider() {
     return provider
 }
 
+function getSigner(provider: ethers.providers.JsonRpcProvider) {
+    console.log(`getSigner() Called`)
+
+    const environment = process.env.BLOCKCHAIN_NETWORK
+    let privateKey: string
+    switch (environment) {
+        case 'mumbai':
+            console.log(`Current Network... Mumbai`)
+            privateKey = process.env.DEPLOYER_PK_PROD as string
+            break
+        default:
+            console.log(`Current Network... Local`)
+            privateKey = process.env.DEPLOYER_PK_LOCAL as string
+            break
+    }
+    const signer = new ethers.Wallet(privateKey, provider)
+    return signer
+}
+
 function instantiateHikyakuContract(provider: ethers.providers.JsonRpcProvider) {
     console.log(`instantiateHikyakuContract() Called`)
 
@@ -56,23 +75,22 @@ async function main() {
     // Initialize Provider
     const provider = getProvider()
 
-    // Instatiate Contract
-    const contract = instantiateHikyakuContract(provider)
+    // Get Signer
+    const signer = getSigner(provider)
 
-    // Test Calls
-    const testCalls = await contract.getResolvedAddress('test@example.com')
-    console.log(`testCalls: ${testCalls}`)
+    // Instatiate Contract
+    const hikyakuContract = instantiateHikyakuContract(provider)
 
     // Event to be subscrived
-    const eventQuery = contract.filters.ResolveRequested()
+    const eventQuery = hikyakuContract.filters.ResolveRequested()
 
     //
-    const testEventQuery = await contract.queryFilter(eventQuery)
+    const testEventQuery = await hikyakuContract.queryFilter(eventQuery)
     console.log(eventQuery)
     console.log(testEventQuery)
 
     // Start Event Subscription
-    contract.on(eventQuery, async (requester, mailAddress, name, message) => {
+    hikyakuContract.on(eventQuery, async (requester, mailAddress, name, message) => {
         console.log(
             `Request from ${requester} (name: ${name}) to ${mailAddress} with message ${message}`,
         )
@@ -88,6 +106,13 @@ async function main() {
         // mint PKP and get walletAddress
         const pkpTokenId = await mintPkP()
         const tempWalletAddress = await getAddressFromPkp(pkpTokenId)
+
+        // Register pkpAddress
+        console.log(`Registering pkpAddress...`)
+        hikyakuContract
+            .connect(signer)
+            .registerPkpAddress(requester, mailAddress, tempWalletAddress)
+        console.log(`pkpAddress Registered!`)
 
         // create JWT
         const signedJwt = createJwt(mailAddress)
