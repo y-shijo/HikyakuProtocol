@@ -5,9 +5,13 @@ import 'twin.macro'
 export const HomePageInput: FC = () => {
   return (
     <>
-      <div tw="mt-6 flex flex-col items-center text-center font-mono">
-        <Input placeholder="Enter email to resolve" size="lg" />
-      </div>
+      <form
+        action="/resolve"
+        method="get"
+        tw="mt-6 flex flex-col items-center text-center font-mono"
+      >
+        <Input id="id" name="id" placeholder="Enter email to resolve" size="lg" />
+      </form>
     </>
   )
 }
