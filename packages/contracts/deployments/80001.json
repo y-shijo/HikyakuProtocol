@@ -69,6 +69,115 @@
           "type": "function"
         }
       ]
+    },
+    "HikyakuProtocol": {
+      "address": "0xd4f62F9Cef4B45d39Ab1635077FA5e5F69A12797",
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "mailAddress",
+              "type": "string"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "resolvedAddress",
+              "type": "address"
+            }
+          ],
+          "name": "Registered",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "mailAddress",
+              "type": "string"
+            }
+          ],
+          "name": "ResolveRequested",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "mailAddress",
+              "type": "string"
+            }
+          ],
+          "name": "getResolvedAddress",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "mailAddress",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "resolvedAddress",
+              "type": "address"
+            }
+          ],
+          "name": "register",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "mailAddress",
+              "type": "string"
+            }
+          ],
+          "name": "requestResolve",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
     }
   }
 }
