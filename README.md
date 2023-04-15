@@ -12,12 +12,17 @@ By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04
 
 **Table of Contents:**
 
-1. [The Stack](#the-stack)
-2. [Protocol Spec](#protocol-spec)
-3. [Live demo](#live-demo)
-4. [Development](#development)
-   1. [Quickstart](#quickstart)
-5. [Deployment](#deployment)
+- [HiKyaku Protocol – Email 🤝 web3 address](#hikyaku-protocol--email--web3-address)
+  - [The Stack](#the-stack)
+  - [Protocol Spec](#protocol-spec)
+    - [1. Register email address](#1-register-email-address)
+    - [2. Send email](#2-send-email)
+    - [3. Resolve web3 address](#3-resolve-web3-address)
+    - [4. Get web3 address](#4-get-web3-address)
+  - [Live demo](#live-demo)
+  - [Development](#development)
+    - [Quickstart](#quickstart)
+  - [Deployment](#deployment)
 
 ---
 
@@ -54,6 +59,7 @@ The JWT token is signed by the notifier provider's private key and the format is
 {
   "iss": "https://hikyaku-protocol-notifier.vercel.app",
   "sub": "ken@example.com",
+  "req": "0xdD2FD4581271e230360230F9337D5c0430Bf44C0",
   "type": "email",
   "nonce": 9999,
   "exp": 1620000000

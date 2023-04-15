@@ -1,6 +1,7 @@
 interface HikyakuJwtPayload {
   iss: string
   sub: string
+  req: string
   type: 'email'
   nonce: number
   exp: number
@@ -22,12 +23,13 @@ export async function parseJwtAndVerify(token: string): Promise<HikyakuJwtPayloa
   const payload = JSON.parse(jsonPayload)
   if (payload.type !== 'email') {
     throw new Error('Invalid token type')
-  } else if (!payload.iss || !payload.sub || !payload.nonce || !payload.exp) {
+  } else if (!payload.iss || !payload.sub || !payload.req || !payload.nonce || !payload.exp) {
     throw new Error('Invalid token payload')
   }
   return {
     iss: payload.iss,
     sub: payload.sub,
+    req: payload.req,
     type: payload.type,
     nonce: payload.nonce,
     exp: payload.exp,
