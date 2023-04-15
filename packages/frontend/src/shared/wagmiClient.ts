@@ -21,6 +21,13 @@ export const getRpcUrl = (chainId: number): string => {
   return env.rpcUrls[chainId as keyof typeof env.rpcUrls]
 }
 
+supportedChains.push({
+  id: 534353,
+  name: 'Scroll Alpha',
+  network: 'scrollalpha',
+  rpcUrls: { default: 'https://alpha-rpc.scroll.io/l2' },
+})
+
 export const {
   chains: [, ...chains],
   provider,
