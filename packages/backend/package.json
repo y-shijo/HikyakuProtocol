@@ -1,31 +1,34 @@
 {
-  "name": "@ethathon/backend",
-  "license": "MIT",
-  "version": "0.1.0",
-  "description": "Template for TypeScript project using Node.js v16",
-  "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "clean": "rimraf dist",
-    "lint": "eslint '**/*.{js,ts}'",
-    "prebuild": "npm run clean",
-    "start": "ts-node src/main.ts",
-    "test": "jest --passWithNoTests"
-  },
-  "devDependencies": {
-    "@eslint-recommended/eslint-config-typescript": "3.0.0",
-    "@tsconfig/node18": "1.0.1",
-    "@types/node": "18.15.11",
-    "eslint": "8.31.0",
-    "eslint-plugin-jest": "27.2.1",
-    "jest": "29.3.1",
-    "rimraf": "3.0.2",
-    "ts-jest": "29.0.3",
-    "ts-node": "10.9.1",
-    "typescript": "4.9.4"
-  },
-  "dependencies": {
-    "axios": "^1.2.2",
-    "dotenv": "^16.0.3",
-    "ethers": "^5.7.2"
-  }
+    "name": "@ethathon/backend",
+    "license": "MIT",
+    "version": "0.1.0",
+    "description": "Template for TypeScript project using Node.js v16",
+    "scripts": {
+        "build": "tsc --project tsconfig.build.json",
+        "clean": "rimraf dist",
+        "lint": "eslint '**/*.{js,ts}'",
+        "prebuild": "npm run clean",
+        "start": "ts-node src/main.ts",
+        "test": "jest --passWithNoTests"
+    },
+    "devDependencies": {
+        "@eslint-recommended/eslint-config-typescript": "3.0.0",
+        "@tsconfig/node18": "1.0.1",
+        "@types/node": "18.15.11",
+        "eslint": "8.31.0",
+        "eslint-plugin-jest": "27.2.1",
+        "jest": "29.3.1",
+        "rimraf": "3.0.2",
+        "ts-jest": "29.0.3",
+        "ts-node": "10.9.1",
+        "typescript": "4.9.4"
+    },
+    "dependencies": {
+        "@types/jsonwebtoken": "^9.0.1",
+        "axios": "^1.2.2",
+        "dotenv": "^16.0.3",
+        "email-validator": "^2.0.4",
+        "ethers": "^5.7.2",
+        "jsonwebtoken": "^9.0.0"
+    }
 }

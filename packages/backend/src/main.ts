@@ -1,27 +1,50 @@
+import * as EmailValidator from 'email-validator'
+import { ethers } from 'ethers'
+import HIKYAKU_ABI from './abi/HikyakuProtocol.json'
+import { sendMail } from './emailJs'
+import { createJwt } from './jwt'
+
+require('dotenv').config()
+
 async function main() {
     console.log('Main: Started')
 
-    // 1. Providerの初期化
-    // provider = new ethers.providers.JsonRpcProvider(process.env.LOCAL_RPC_ENDPOINT);
+    // Initialize Provider
+    const provider = new ethers.providers.JsonRpcProvider(process.env.LOCAL_RPC_ENDPOINT)
 
-    // 2. コントラクトのインスタンス
-    // const contract = new ethers.Contract(コントラクトアドレス, ABI, provider);
+    // Instatiate Contract
+    const contract = new ethers.Contract(
+        process.env.HIKYAKU_CONTRACT_ADDR as string,
+        HIKYAKU_ABI,
+        provider,
+    )
 
-    // 3. 試しでコントラクトと通信
-    // await contract.{{スマートコントラクトの関数名}}
+    await contract.getResolvedAddress('yoshinobu@startale.org')
 
-    // 4. Subscribeするイベントの定義
-    // const eventQuery = contract.filters.ResolveRequested();
+    // Event to be subscrived
+    const eventQuery = contract.filters.ResolveRequested()
 
-    // 5. イベントのSubscribeの開始
-    /* contract.on(eventQuery, (イベントで渡される引数) => {
-        const mailAddress = {{メールアドレス}}
+    // Start Event Subscription
+    contract.on(eventQuery, (requester, mailAddress) => {
+        console.log(`Request from ${requester} to ${mailAddress}`)
 
-        sendMailTo(mailAddress)
+        // Email Validation
+        if (!EmailValidator.validate(mailAddress)) {
+            console.log(
+                `Given email address "${mailAddress}" is invalid. Skip the email sending...`,
+            )
+            return
+        }
+
+        // create JWT
+        const signedJwt = createJwt(mailAddress)
+
+        // send Email
+        const link = `https://hikyaku-protocol.vercel.app/resolve?k=${signedJwt}`
+        sendMail(mailAddress, requester, link)
+
+        console.log(`Event Processing Fisnihed`)
     })
-    */
-
-    // sendMailTo('yoshinobushijo02264@gmail.com')
 }
 
 main().catch((error) => {

@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const EMAIL_JS_BASE_URL = 'https://api.emailjs.com/api/v1.0/email'
 
-function sendMailTo(email: string) {
+function sendMail(email: string, fromAddress: string, link: string) {
     console.log(`sendMail: Initilization`)
 
     // Construct Data
@@ -15,7 +15,8 @@ function sendMailTo(email: string) {
         accessToken: process.env.EMAIL_JS_ACCESS_TOKEN,
         template_params: {
             to_address: email,
-            from_name: 'Hikyaku Protocol',
+            from_address: fromAddress,
+            link: link,
         },
     }
 
@@ -24,4 +25,4 @@ function sendMailTo(email: string) {
     console.log(`sendMail: Mail sent with params ${JSON.stringify(data.template_params, null, 2)}`)
 }
 
-export { sendMailTo }
+export { sendMail }
