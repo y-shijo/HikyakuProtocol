@@ -1,5 +1,4 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Text } from '@chakra-ui/react'
-import LoadingInfo from '@components/common/LoadingInfo'
 import { HikyakuProtocol__factory } from '@ethathon/contracts/typechain-types' // TODO
 import { useDeployments } from '@shared/useDeployments'
 import { useState } from 'react'
@@ -21,6 +20,7 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
     const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
     try {
       setIsSending(true)
+      setErrorText(null)
       const tx = await contract.requestResolve(id)
       console.log('requestResolve tx', tx)
       toast.success('Email sent! Wait for the owner to respond.')
@@ -38,9 +38,7 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
   return (
     <>
       <Box tw="my-2" textAlign="center">
-        {isSending ? (
-          <LoadingInfo text="Sending email..."></LoadingInfo>
-        ) : hasSent ? (
+        {hasSent ? (
           <Alert
             status="success"
             variant="subtle"
@@ -60,7 +58,12 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
           <Box>
             <Text>Ask the owner of email address for the web3 address.</Text>
             <div tw="my-8" />
-            <Button onClick={handleRequestResolve} colorScheme="blue" size="lg">
+            <Button
+              isLoading={isSending}
+              onClick={handleRequestResolve}
+              colorScheme="blue"
+              size="lg"
+            >
               Send email to resolve
             </Button>
             {errorText && (
