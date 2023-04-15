@@ -8,31 +8,28 @@ Resolve any email address to web3 address.
 
 By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04), Tei
 
+### Live demo
+
+https://hikyaku-protocol.vercel.app/
+
 ---
 
 **Table of Contents:**
 
+1. [What problem we addressed](#what-problem-we-addressed)
+1. [Protocol Spec](#protocol-spec)
 1. [The Stack](#the-stack)
-2. [Protocol Spec](#protocol-spec)
-3. [Live demo](#live-demo)
-4. [Development](#development)
+1. [Development](#development)
    1. [Quickstart](#quickstart)
-5. [Deployment](#deployment)
+   1. [Deployment](#deployment)
 
 ---
 
-## The Stack
+## What problem we addressed
 
-- Package-Manager: `pnpm`
-- Monorepo Tooling: `turborepo`
-- Smart Contract Development: `hardhat`
-  - Deploy & Address-Export: `hardhat-deploy`
-  - Typescript-Types: `typechain`
-- Frontend: `next`
-  - Contract Interactions: `wagmi`, `rainbowkit`
-  - Styling: `chakra`, `tailwindcss`, `twin.macro`, `emotion`
-- Misc:
-  - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
+Currently, there are many services that require users to register their web3 address. However, it is difficult for users to register their web3 address because they need to know how to use MetaMask or other wallet applications. In addition, it is difficult for users to remember their web3 address.
+
+---
 
 ## Protocol Spec
 
@@ -70,9 +67,20 @@ When the user opens the url in the email, the user can register his/her web3 add
 
 Once the user's web3 address is registered, the email address can be resolved to the web3 address by calling the `getResolvedAddress` function of the contract.
 
-## Live demo
+---
 
-https://hikyaku-protocol.vercel.app/
+## The Stack
+
+- Package-Manager: `pnpm`
+- Monorepo Tooling: `turborepo`
+- Smart Contract Development: `hardhat`
+  - Deploy & Address-Export: `hardhat-deploy`
+  - Typescript-Types: `typechain`
+- Frontend: `next`
+  - Contract Interactions: `wagmi`, `rainbowkit`
+  - Styling: `chakra`, `tailwindcss`, `twin.macro`, `emotion`
+- Misc:
+  - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
 
 ## Development
 
@@ -100,7 +108,7 @@ pnpm dev
 pnpm frontend:dev
 ```
 
-## Deployment
+### Deployment
 
 Setting up a deployment via Vercel is pretty straightforward as build settings are preconfigured in `vercel.json`. To get started, press the **Deploy** button and enter the default environment variables listed below.
 
