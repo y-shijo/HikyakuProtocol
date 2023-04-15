@@ -13,8 +13,10 @@ contract HikyakuProtocol {
     /**
      * Requester Address => Mail Address => Resolved Address
      *   ex) 0x1234 => hello[at]example.com => 0xABCD
+     *       0x1234 => bye[at]example.com => 0xABCD
      */
     mapping(address => mapping(string => address)) internal records;
+    mapping(address => mapping(address => string[])) internal recordsInverse;
 
     constructor() {
     }
@@ -49,7 +51,7 @@ contract HikyakuProtocol {
         if (resolvedAddress != address(0)) {
             revert();
         }
-    
+
         // If the mailAddress is NOT resolved yet.
         // Emit Event
         emit ResolveRequested(requester, mailAddress);
@@ -72,7 +74,42 @@ contract HikyakuProtocol {
         // Register Records
         records[requester][mailAddress] = resolvedAddress;
 
+        if (recordsInverse[resolvedAddress][requester].length == 0) {
+            recordsInverse[resolvedAddress][requester] = new string[](0);
+        }
+
+        recordsInverse[resolvedAddress][requester].push(mailAddress);
+
         // Emit Event
         emit Registered(requester, mailAddress, resolvedAddress);
     }
+
+    /**
+     * @dev Register the wallet address
+     * @param requester Requester Address
+     */
+
+    function deleteWithRequester(address requester) public {
+        string[] memory deleteMailAddresses = recordsInverse[msg.sender][requester];
+        delete recordsInverse[msg.sender][requester];
+        for (uint i = 0; i < deleteMailAddresses.length; i++) {
+            delete records[requester][deleteMailAddresses[i]];
+        }
+    }
+
+    // function deleteAllInfoOfMsgSender() public {
+    //     string[] deleteMailAddresses;
+    //     st
+    //     for (uint i = 0; i < deleteMailAddresses.length; i++) {
+    //         recordsInverse[];
+    //     }
+    //     string[] deleteMailAddresses = recordsInverse[requester][msg.sender];
+    //     delete recordsInverse[requester][msg.sender];
+    //     for (uint i = 0; i < deleteMailAddresses.length; i++) {
+    //         delete records[requester][deleteMailAddresses[i]];
+    //     }
+    // }
+
+
+
 }
