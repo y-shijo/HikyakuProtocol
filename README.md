@@ -55,6 +55,7 @@ The JWT token is signed by the notifier provider's private key and the format is
   "iss": "https://hikyaku-protocol-notifier.vercel.app",
   "sub": "ken@example.com",
   "type": "email",
+  "nonce": 9999,
   "exp": 1620000000
 }
 ```
