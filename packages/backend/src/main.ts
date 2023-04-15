@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import HIKYAKU_ABI from './abi/HikyakuProtocol.json'
 import { sendMail } from './emailJs'
 import { createJwt } from './jwt'
+import { getAddressFromPkp, mintPkP, transferPkpToken } from './litProtocol'
 
 require('dotenv').config()
 
@@ -25,6 +26,25 @@ function getProvider() {
 
     console.log(`getProvider() Finished`)
     return provider
+}
+
+function getSigner(provider: ethers.providers.JsonRpcProvider) {
+    console.log(`getSigner() Called`)
+
+    const environment = process.env.BLOCKCHAIN_NETWORK
+    let privateKey: string
+    switch (environment) {
+        case 'mumbai':
+            console.log(`Current Network... Mumbai`)
+            privateKey = process.env.DEPLOYER_PK_PROD as string
+            break
+        default:
+            console.log(`Current Network... Local`)
+            privateKey = process.env.DEPLOYER_PK_LOCAL as string
+            break
+    }
+    const signer = new ethers.Wallet(privateKey, provider)
+    return signer
 }
 
 function instantiateHikyakuContract(provider: ethers.providers.JsonRpcProvider) {
@@ -50,20 +70,30 @@ function instantiateHikyakuContract(provider: ethers.providers.JsonRpcProvider) 
 }
 
 async function main() {
+    let pkpTokenIdMapper: any = {}
+
     console.log('Main: Started')
 
     // Initialize Provider
     const provider = getProvider()
 
+    // Get Signer
+    const signer = getSigner(provider)
+
     // Instatiate Contract
-    const contract = instantiateHikyakuContract(provider)
+    const hikyakuContract = instantiateHikyakuContract(provider)
 
     // Event to be subscrived
-    const eventQuery = contract.filters.ResolveRequested()
+    const resolveRequestedEvent = hikyakuContract.filters.ResolveRequested()
 
-    // Start Event Subscription
-    contract.on(eventQuery, (requester, mailAddress) => {
-        console.log(`Request from ${requester} to ${mailAddress}`)
+    // const testEventQuery = await hikyakuContract.queryFilter(resolveRequestedEvent)
+    // console.log(testEventQuery)
+
+    // Start Event Subscription for resolveRequestedEvent
+    hikyakuContract.on(resolveRequestedEvent, async (requester, mailAddress, name, message) => {
+        console.log(
+            `Request from ${requester} (name: ${name}) to ${mailAddress} with message ${message}`,
+        )
 
         // Email Validation
         if (!EmailValidator.validate(mailAddress)) {
@@ -73,15 +103,47 @@ async function main() {
             return
         }
 
+        // mint PKP and get walletAddress
+        const pkpTokenId = await mintPkP()
+        const tempWalletAddress = await getAddressFromPkp(pkpTokenId)
+
+        // Save pkpTokenId
+        const key = ((requester as string) + mailAddress) as string
+        pkpTokenIdMapper[key] = pkpTokenId
+
+        // Register pkpAddress
+        console.log(`Registering pkpAddress...`)
+        hikyakuContract
+            .connect(signer)
+            .registerPkpAddress(requester, mailAddress, tempWalletAddress)
+        console.log(`pkpAddress Registered!`)
+
         // create JWT
-        const signedJwt = createJwt(mailAddress)
+        const signedJwt = createJwt(mailAddress, requester)
 
         // send Email
         const link = `https://hikyaku-protocol.vercel.app/resolve?k=${signedJwt}`
-        sendMail(mailAddress, requester, link)
+        sendMail(mailAddress, requester, link, name, message)
 
         console.log(`Event Processing Fisnihed`)
     })
+
+    // Event to be subscrived
+    const registeredEvent = hikyakuContract.filters.Registered()
+
+    // Start Event Subscription for resolveRequestedEvent
+    hikyakuContract.on(registeredEvent, async (requester, mailAddress, resolvedAddress) => {
+        console.log(`Resolved from ${requester} for ${mailAddress} as ${resolvedAddress}`)
+
+        // Transfer pkpToken
+        const key = ((requester as string) + mailAddress) as string
+        const pkpTokenId = pkpTokenIdMapper[key]
+        if (pkpTokenId) {
+            transferPkpToken(pkpTokenId, resolvedAddress)
+        }
+    })
+
+    console.log(`Event Subscribing...`)
 }
 
 main().catch((error) => {

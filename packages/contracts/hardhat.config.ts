@@ -18,10 +18,10 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             chainId: 1337,
-            accounts: {
-                mnemonic: process.env.DEPLOYER_MNEMONIC,
-                count: 10,
-            },
+            // accounts: {
+            //     mnemonic: process.env.DEPLOYER_MNEMONIC,
+            //     count: 10,
+            // },
         },
         mumbai: {
             chainId: 80001,
@@ -31,6 +31,11 @@ const config: HardhatUserConfig = {
         goerli: {
             chainId: 5,
             url: process.env.GOERLI_URL || 'https://rpc.ankr.com/eth_goerli',
+            accounts: [process.env.DEPLOYER_PK_PROD as string],
+        },
+        scrollAlpha: {
+            chainId: 534353,
+            url: 'https://alpha-rpc.scroll.io/l2' || '',
             accounts: [process.env.DEPLOYER_PK_PROD as string],
         },
     },
