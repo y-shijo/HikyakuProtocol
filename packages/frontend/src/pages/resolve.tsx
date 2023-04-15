@@ -21,13 +21,21 @@ import { CenterBody } from '@components/layout/CenterBody'
 import { RequestResolveContractInteractions } from '@components/web3/RequestResolveContractInteractions'
 import { HikyakuProtocol__factory } from '@ethathon/contracts/typechain-types'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { parseJwtAndVerify } from '@shared/jwt'
 import { useDeployments } from '@shared/useDeployments'
+import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import 'twin.macro'
 import { useSigner } from 'wagmi'
 
-const ResolvePage = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const ResolvePage = ({
+  isAuthenticated,
+  givenId,
+}: {
+  isAuthenticated: boolean
+  givenId?: string
+}) => {
   const router = useRouter()
   const { data: signer } = useSigner()
   const { contracts } = useDeployments()
@@ -35,7 +43,7 @@ const ResolvePage = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isResolving, setIsResolving] = useState(true)
   const [resolvedAddress, setResolvedAddress] = useState<string | null>(null)
 
-  const id = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
+  const id = givenId ?? (Array.isArray(router.query.id) ? router.query.id[0] : router.query.id)
   const k = Array.isArray(router.query.k) ? router.query.k[0] : router.query.k
 
   useEffect(() => {
@@ -126,12 +134,23 @@ const ResolvePage = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   )
 }
 
-export async function getServerSideProps() {
-  // TODO(knaoe): check authentication with k
-  return {
-    props: {
-      isAuthenticated: false,
-    },
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { query } = context
+  const jwt = Array.isArray(query.k) ? query.k[0] : query.k
+  if (jwt) {
+    const payload = await parseJwtAndVerify(jwt)
+    return {
+      props: {
+        isAuthenticated: true,
+        givenId: payload.sub,
+      },
+    }
+  } else {
+    return {
+      props: {
+        isAuthenticated: false,
+      },
+    }
   }
 }
 
