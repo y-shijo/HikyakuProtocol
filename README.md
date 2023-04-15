@@ -4,13 +4,15 @@
 
 <img src="packages/frontend/public/images/cover.jpg" alt="Cover Image" />
 
-Resolve any email address to web3 address.
-
-By [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04), Tei
+Hikyaku Protocol makes it a breeze to send web3 assets to anyone with just an email address, even if you don't know their web3 address, all while maintaining privacy through end-to-end encryption.
 
 ### Live demo
 
 https://hikyaku-protocol.vercel.app/
+
+## Authors
+
+Made by [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yoshijo04), Tei in EthGlobal ETHTokyo 2023 Hackathon.
 
 ---
 
