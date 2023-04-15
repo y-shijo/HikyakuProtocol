@@ -1,7 +1,7 @@
 {
-  "extends": "solhint:recommended",
-  "plugins": [],
-  "rules": {
-    "compiler-version": ["error", "0.8.9"]
-  }
+    "extends": "solhint:recommended",
+    "plugins": [],
+    "rules": {
+        "compiler-version": ["error", "0.8.9"]
+    }
 }
