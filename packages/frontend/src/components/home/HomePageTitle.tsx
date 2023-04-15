@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { FC } from 'react'
 import 'twin.macro'
@@ -17,11 +16,11 @@ export const HomePageTitle: FC = () => {
           className="group"
           tw="flex cursor-pointer flex-col items-center"
         >
-          <h1 tw="mt-4 font-black text-3xl tracking-tight underline-offset-4 group-hover:underline">
+          <h1 tw="mt-4 font-black text-4xl tracking-tight underline-offset-4 group-hover:underline">
             {title}
           </h1>
         </Link>
-        <p tw="mt-1 text-gray-400">{desc}</p>
+        <p tw="mt-4 text-gray-400 text-xl">{desc}</p>
       </div>
     </>
   )
