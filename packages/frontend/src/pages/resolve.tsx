@@ -68,7 +68,7 @@ const ResolvePage = ({
   }, [signer, contracts])
 
   const onConnectAddressHandler = async () => {
-    if (!id || !signer || !contracts) return
+    if (!requester || !id || !signer || !contracts) return
 
     const deployedAddress = contracts.HikyakuProtocol.address
     const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
