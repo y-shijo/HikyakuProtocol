@@ -33,6 +33,11 @@ const config: HardhatUserConfig = {
             url: process.env.GOERLI_URL || 'https://rpc.ankr.com/eth_goerli',
             accounts: [process.env.DEPLOYER_PK_PROD as string],
         },
+        scrollAlpha: {
+            chainId: 534353,
+            url: 'https://alpha-rpc.scroll.io/l2' || '',
+            accounts: [process.env.DEPLOYER_PK_PROD as string],
+        },
     },
     namedAccounts: {
         deployer: {
