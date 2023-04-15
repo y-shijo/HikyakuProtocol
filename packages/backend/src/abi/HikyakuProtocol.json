@@ -43,6 +43,18 @@
                 "internalType": "string",
                 "name": "mailAddress",
                 "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "message",
+                "type": "string"
             }
         ],
         "name": "ResolveRequested",
@@ -95,6 +107,16 @@
             {
                 "internalType": "string",
                 "name": "mailAddress",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "message",
                 "type": "string"
             }
         ],

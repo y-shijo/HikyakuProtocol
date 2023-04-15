@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import HIKYAKU_ABI from './abi/HikyakuProtocol.json'
 import { sendMail } from './emailJs'
 import { createJwt } from './jwt'
+import { getAddressFromPkp, mintPkP } from './litProtocol'
 
 require('dotenv').config()
 
@@ -58,12 +59,23 @@ async function main() {
     // Instatiate Contract
     const contract = instantiateHikyakuContract(provider)
 
+    // Test Calls
+    const testCalls = await contract.getResolvedAddress('test@example.com')
+    console.log(`testCalls: ${testCalls}`)
+
     // Event to be subscrived
     const eventQuery = contract.filters.ResolveRequested()
 
+    //
+    const testEventQuery = await contract.queryFilter(eventQuery)
+    console.log(eventQuery)
+    console.log(testEventQuery)
+
     // Start Event Subscription
-    contract.on(eventQuery, (requester, mailAddress) => {
-        console.log(`Request from ${requester} to ${mailAddress}`)
+    contract.on(eventQuery, async (requester, mailAddress, name, message) => {
+        console.log(
+            `Request from ${requester} (name: ${name}) to ${mailAddress} with message ${message}`,
+        )
 
         // Email Validation
         if (!EmailValidator.validate(mailAddress)) {
@@ -73,15 +85,21 @@ async function main() {
             return
         }
 
+        // mint PKP and get walletAddress
+        const pkpTokenId = await mintPkP()
+        const tempWalletAddress = await getAddressFromPkp(pkpTokenId)
+
         // create JWT
         const signedJwt = createJwt(mailAddress)
 
         // send Email
         const link = `https://hikyaku-protocol.vercel.app/resolve?k=${signedJwt}`
-        sendMail(mailAddress, requester, link)
+        sendMail(mailAddress, requester, link, name, message)
 
         console.log(`Event Processing Fisnihed`)
     })
+
+    console.log(`Event Subscribing...`)
 }
 
 main().catch((error) => {

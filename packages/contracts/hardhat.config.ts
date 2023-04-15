@@ -18,10 +18,10 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             chainId: 1337,
-            accounts: {
-                mnemonic: process.env.DEPLOYER_MNEMONIC,
-                count: 10,
-            },
+            // accounts: {
+            //     mnemonic: process.env.DEPLOYER_MNEMONIC,
+            //     count: 10,
+            // },
         },
         mumbai: {
             chainId: 80001,

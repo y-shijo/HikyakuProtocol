@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 contract HikyakuProtocol {
 
     // Event Definitions
-    event ResolveRequested(address indexed requester, string mailAddress);
+    event ResolveRequested(address indexed requester, string mailAddress, string name, string message);
     event Registered(address indexed requester, string mailAddress, address indexed resolvedAddress);
 
     /**
@@ -36,7 +36,7 @@ contract HikyakuProtocol {
      * @dev Request to resolve the mail address to wallet address.
      * @param mailAddress Mail Address to be resolved
      */
-    function requestResolve(string memory mailAddress) public {
+    function requestResolve(string memory mailAddress, string memory name, string memory message) public {
         // TODO: Need to avoid trivial resolve requests.
 
         // Parameter Checks
@@ -52,7 +52,7 @@ contract HikyakuProtocol {
     
         // If the mailAddress is NOT resolved yet.
         // Emit Event
-        emit ResolveRequested(requester, mailAddress);
+        emit ResolveRequested(requester, mailAddress, name, message);
     }
 
     /**
