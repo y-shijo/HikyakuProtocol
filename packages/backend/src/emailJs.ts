@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const EMAIL_JS_BASE_URL = 'https://api.emailjs.com/api/v1.0/email'
 
-function sendMail(email: string, fromAddress: string, link: string) {
+function sendMail(email: string, fromAddress: string, link: string, name: string, message: string) {
     console.log(`sendMail: Initilization`)
 
     // Construct Data
@@ -17,6 +17,8 @@ function sendMail(email: string, fromAddress: string, link: string) {
             to_address: email,
             from_address: fromAddress,
             link: link,
+            name: name,
+            message: message,
         },
     }
 

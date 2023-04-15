@@ -41,7 +41,7 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
     try {
       setIsSending(true)
       setErrorText(null)
-      const tx = await contract.requestResolve(id) // id, name, message
+      const tx = await contract.requestResolve(id, name!, message!) // id, name, message
       console.log('requestResolve tx', tx)
       toast.success('Email sent! Wait for the owner to respond.')
       setIsSending(false)

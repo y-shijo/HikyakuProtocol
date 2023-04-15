@@ -16,12 +16,18 @@ https://hikyaku-protocol.vercel.app/
 
 **Table of Contents:**
 
-1. [What problem we addressed](#what-problem-we-addressed)
-1. [Protocol Spec](#protocol-spec)
-1. [The Stack](#the-stack)
-1. [Development](#development)
-   1. [Quickstart](#quickstart)
-   1. [Deployment](#deployment)
+- [HiKyaku Protocol](#hikyaku-protocol)
+    - [Live demo](#live-demo)
+  - [What problem we addressed](#what-problem-we-addressed)
+  - [Protocol Spec](#protocol-spec)
+    - [1. Register email address](#1-register-email-address)
+    - [2. Send email](#2-send-email)
+    - [3. Resolve web3 address](#3-resolve-web3-address)
+    - [4. Get web3 address](#4-get-web3-address)
+  - [The Stack](#the-stack)
+  - [Development](#development)
+    - [Quickstart](#quickstart)
+    - [Deployment](#deployment)
 
 ---
 
@@ -51,6 +57,7 @@ The JWT token is signed by the notifier provider's private key and the format is
 {
   "iss": "https://hikyaku-protocol-notifier.vercel.app",
   "sub": "ken@example.com",
+  "req": "0xdD2FD4581271e230360230F9337D5c0430Bf44C0",
   "type": "email",
   "nonce": 9999,
   "exp": 1620000000

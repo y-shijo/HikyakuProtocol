@@ -12,13 +12,14 @@ const JWT_SECRET = process.env.JWT_SECRET_FOR_SIGN as string
 
 import * as jwt from 'jsonwebtoken'
 
-function createJwt(email: string): string {
+function createJwt(email: string, req: string): string {
     console.log(`createJwt: Initilization`)
 
     // Construct Data
     const jwtPayload = {
         iss: 'https://hikyaku-protocol-notifier.vercel.app',
         sub: email,
+        req: req,
         type: 'email',
         nonce: 9999, // TODO: Generate Random Nonce
         exp: 1620000000, // TODO: Set Appropriate Nonce

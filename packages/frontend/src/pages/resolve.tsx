@@ -26,15 +26,18 @@ import { useDeployments } from '@shared/useDeployments'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import 'twin.macro'
 import { useSigner } from 'wagmi'
 
 const ResolvePage = ({
   isAuthenticated,
   givenId,
+  requester,
 }: {
   isAuthenticated: boolean
   givenId?: string
+  requester?: string
 }) => {
   const router = useRouter()
   const { data: signer } = useSigner()
@@ -46,21 +49,40 @@ const ResolvePage = ({
   const id = givenId ?? (Array.isArray(router.query.id) ? router.query.id[0] : router.query.id)
   const k = Array.isArray(router.query.k) ? router.query.k[0] : router.query.k
 
+  const zeroAddress = '0x0000000000000000000000000000000000000000'
+
   useEffect(() => {
     ;(async () => {
       if (!id || !signer || !contracts) return
       const deployedAddress = contracts.HikyakuProtocol.address
       const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
       try {
-        const owner = await contract.getResolvedAddress(id)
-        setResolvedAddress(owner ?? null)
+        const owner = await contract.getResolvedAddress(await signer.getAddress(), id)
+        console.log(`Resolved Address: ${owner}`)
+        setResolvedAddress(owner == zeroAddress ? null : owner)
       } catch (e) {
         console.error(e)
       }
-      setResolvedAddress(null)
       setIsResolving(false)
     })()
   }, [signer, contracts])
+
+  const onConnectAddressHandler = async () => {
+    if (!id || !signer || !contracts) return
+
+    const deployedAddress = contracts.HikyakuProtocol.address
+    const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
+    const resolvedAddress = await signer.getAddress()
+
+    console.log(requester, id, resolvedAddress)
+    try {
+      const tx = await contract.register(requester, id, resolvedAddress)
+      console.log('register tx', tx)
+      toast.success('Your address is registered!')
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   if (!id)
     return (
@@ -112,7 +134,7 @@ const ResolvePage = ({
                       <CenterBody tw="m-4">
                         <ConnectButton />
                         <div tw="my-4" />
-                        <Button colorScheme="blue" size="md">
+                        <Button colorScheme="blue" size="md" onClick={onConnectAddressHandler}>
                           Connect your web3 address to {id}
                         </Button>
                       </CenterBody>
@@ -126,8 +148,10 @@ const ResolvePage = ({
                 </CardBody>
               </Card>
             </Tabs>
-          ) : (
+          ) : !resolvedAddress ? (
             <RequestResolveContractInteractions id={id}></RequestResolveContractInteractions>
+          ) : (
+            <></>
           ))}
       </CenterBody>
     </>
@@ -143,6 +167,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       props: {
         isAuthenticated: true,
         givenId: payload.sub,
+        requester: payload.req,
       },
     }
   } else {

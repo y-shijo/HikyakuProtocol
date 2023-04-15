@@ -7,7 +7,8 @@ import "hardhat/console.sol";
 contract HikyakuProtocol {
 
     // Event Definitions
-    event ResolveRequested(address indexed requester, string mailAddress);
+    event ResolveRequested(address indexed requester, string mailAddress, string name, string message);
+    event PkpRegisterd(address indexed requester, string mailAddress, address indexed resolvedAddress);
     event Registered(address indexed requester, string mailAddress, address indexed resolvedAddress);
 
     /**
@@ -23,12 +24,11 @@ contract HikyakuProtocol {
      * @dev Return the resolved address for msg.sender
      * @param mailAddress Mail Address to be resolved
      */
-    function getResolvedAddress(string memory mailAddress) public view returns (address) {
+    function getResolvedAddress(address requester, string memory mailAddress) public view returns (address) {
         // Parameter Checks
         require(bytes(mailAddress).length != 0, "Invalid Mail Address Length");
 
         // Return the resolved address (might be ZERO Address if no record is found)
-        address requester = msg.sender;
         return records[requester][mailAddress];
     }
 
@@ -36,7 +36,7 @@ contract HikyakuProtocol {
      * @dev Request to resolve the mail address to wallet address.
      * @param mailAddress Mail Address to be resolved
      */
-    function requestResolve(string memory mailAddress) public {
+    function requestResolve(string memory mailAddress, string memory name, string memory message) public {
         // TODO: Need to avoid trivial resolve requests.
 
         // Parameter Checks
@@ -52,7 +52,20 @@ contract HikyakuProtocol {
     
         // If the mailAddress is NOT resolved yet.
         // Emit Event
-        emit ResolveRequested(requester, mailAddress);
+        emit ResolveRequested(requester, mailAddress, name, message);
+    }
+
+    function registerPkpAddress(address requester, string memory mailAddress, address pkpAddress) public {
+        // Parameter Checks
+        require(requester != address(0), "Invalid Requester Address");
+        require(bytes(mailAddress).length != 0, "Incalid Mail Address Length");
+        require(pkpAddress != address(0), "Invalid Resolved Address");
+
+        // Register Records
+        records[requester][mailAddress] = pkpAddress;
+
+        // Event
+        emit PkpRegisterd(requester, mailAddress, pkpAddress);
     }
 
     /**
