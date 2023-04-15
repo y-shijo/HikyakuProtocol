@@ -1,7 +1,17 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Text } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  Input,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 import { HikyakuProtocol__factory } from '@ethathon/contracts/typechain-types' // TODO
 import { useDeployments } from '@shared/useDeployments'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast'
 import 'twin.macro'
 
@@ -14,14 +24,24 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
   const [hasSent, setHasSent] = useState(false)
   const [errorText, setErrorText] = useState<string | null>(null)
 
-  const handleRequestResolve = async () => {
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+    const formValue = Object.fromEntries(formData.entries())
+    const { name, message } = formValue
+
+    await handleRequestResolve(name.toString(), message.toString())
+  }
+
+  const handleRequestResolve = async (name?: string, message?: string) => {
     if (typeof id !== 'string' || !signer || !contracts) return
+    console.log('handleRequestResolve', id, name, message)
     const deployedAddress = contracts.HikyakuProtocol.address
     const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
     try {
       setIsSending(true)
       setErrorText(null)
-      const tx = await contract.requestResolve(id)
+      const tx = await contract.requestResolve(id) // id, name, message
       console.log('requestResolve tx', tx)
       toast.success('Email sent! Wait for the owner to respond.')
       setIsSending(false)
@@ -58,20 +78,28 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
           <Box>
             <Text>Ask the owner of email address for the web3 address.</Text>
             <div tw="my-8" />
-            <Button
-              isLoading={isSending}
-              onClick={handleRequestResolve}
-              colorScheme="blue"
-              size="lg"
-            >
-              Send email to resolve
-            </Button>
-            {errorText && (
-              <Alert status="error" tw="mt-4" maxWidth="lg">
-                <AlertIcon />
-                <AlertDescription noOfLines={10}>{errorText}</AlertDescription>
-              </Alert>
-            )}
+            <form onSubmit={onSubmit}>
+              <Stack spacing={4}>
+                <Input id="name" name="name" type="text" size="lg" placeholder="Your name" />
+                <Input
+                  id="message"
+                  name="message"
+                  type="text"
+                  size="lg"
+                  placeholder="Your message"
+                  maxLength={100}
+                />
+                <Button isLoading={isSending} type="submit" colorScheme="blue" size="lg">
+                  Send email to resolve
+                </Button>
+                {errorText && (
+                  <Alert status="error" tw="mt-4" maxWidth="lg">
+                    <AlertIcon />
+                    <AlertDescription noOfLines={10}>{errorText}</AlertDescription>
+                  </Alert>
+                )}
+              </Stack>
+            </form>
           </Box>
         )}
       </Box>
