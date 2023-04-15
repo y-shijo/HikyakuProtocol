@@ -4,11 +4,6 @@ import 'hardhat-deploy'
 import { HardhatUserConfig } from 'hardhat/config'
 dotenv.config()
 
-const accounts = [
-    ...(process.env.PRIVATE_KEY_01 ? [`${process.env.PRIVATE_KEY_01}`] : []),
-    ...(process.env.PRIVATE_KEY_02 ? [`${process.env.PRIVATE_KEY_02}`] : []),
-]
-
 const config: HardhatUserConfig = {
     solidity: {
         version: '0.8.9',
@@ -23,16 +18,20 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             chainId: 1337,
+            accounts: {
+                mnemonic: process.env.DEPLOYER_MNEMONIC,
+                count: 10,
+            },
         },
         mumbai: {
             chainId: 80001,
             url: process.env.POLYGON_MUMBAI_URL || 'https://rpc.ankr.com/polygon_mumbai',
-            accounts,
+            accounts: [process.env.DEPLOYER_PK_PROD as string],
         },
         goerli: {
             chainId: 5,
             url: process.env.GOERLI_URL || 'https://rpc.ankr.com/eth_goerli',
-            accounts,
+            accounts: [process.env.DEPLOYER_PK_PROD as string],
         },
     },
     namedAccounts: {
