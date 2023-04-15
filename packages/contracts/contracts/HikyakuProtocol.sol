@@ -7,8 +7,8 @@ import "hardhat/console.sol";
 contract HikyakuProtocol {
 
     // Event Definitions
-    event ResolveRequested(address indexed requester, string indexed mailAddress);
-    event Registered(address indexed requester, string indexed mailAddress, address indexed resolvedAddress);
+    event ResolveRequested(address indexed requester, string mailAddress);
+    event Registered(address indexed requester, string mailAddress, address indexed resolvedAddress);
 
     /**
      * Requester Address => Mail Address => Resolved Address

@@ -9,6 +9,10 @@
       "path": "../packages/frontend"
     },
     {
+      "name": "Backend",
+      "path": "../packages/backend"
+    },
+    {
       "name": "Contracts",
       "path": "../packages/contracts"
     }
@@ -30,6 +34,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
+      "source.addMissingImports": true,
       "source.organizeImports": true,
       "source.fixAll.eslint": true
     },

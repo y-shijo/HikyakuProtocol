@@ -23,28 +23,27 @@ Router.events.on('routeChangeError', () => NProgress.done())
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      {/* TODO SEO */}
       <DefaultSeo
         dangerouslySetAllPagesToNoFollow={!env.isProduction}
         dangerouslySetAllPagesToNoIndex={!env.isProduction}
-        defaultTitle="ETHathon" // TODO
-        titleTemplate="%s | ETHathon" // TODO
-        description="EVM-based Smart Contract & DApp Development Boilerplate" // TODO
+        defaultTitle="HiKyaku Protocol"
+        titleTemplate="%s | HiKyaku"
+        description="Resolve any email address to web3 address"
         openGraph={{
           type: 'website',
           locale: 'en',
           url: env.url,
-          site_name: 'ETHathon', // TODO
+          site_name: 'HiKyaku',
           images: [
             {
-              url: `${env.url}/images/cover.jpg`, // TODO
+              url: `${env.url}/images/cover.jpg`,
               width: 1200,
               height: 670,
             },
           ],
         }}
         twitter={{
-          handle: '@scio_xyz', // TODO
+          handle: '@hikyaku',
         }}
       />
 
