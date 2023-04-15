@@ -61,4 +61,27 @@ describe('HikyakuProtocol', function () {
       )
     })
   })
+
+  describe('Delete', function () {
+    it('Delete resolved address', async function () {
+      const { hikyakuProtocol, owner, account01 } = await loadFixture(deployFixture)
+      const mailAddress = 'test@example.com'
+
+      expect(
+        await hikyakuProtocol
+          .connect(owner)
+          .register(owner.address, mailAddress, account01.address),
+      )
+        .to.emit(hikyakuProtocol, 'Registered')
+        .withArgs(owner.address, mailAddress, account01.address)
+
+      expect(await hikyakuProtocol.connect(account01).deleteWithRequester(owner.address))
+        .to.emit(hikyakuProtocol, 'Deleted')
+        .withArgs(account01.address, owner.address)
+
+      expect(await hikyakuProtocol.connect(owner).getResolvedAddress(mailAddress)).to.equal(
+        ethers.constants.AddressZero,
+      )
+    })
+  })
 })
