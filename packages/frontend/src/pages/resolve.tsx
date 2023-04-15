@@ -26,15 +26,18 @@ import { useDeployments } from '@shared/useDeployments'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import 'twin.macro'
 import { useSigner } from 'wagmi'
 
 const ResolvePage = ({
   isAuthenticated,
   givenId,
+  requester,
 }: {
   isAuthenticated: boolean
   givenId?: string
+  requester?: string
 }) => {
   const router = useRouter()
   const { data: signer } = useSigner()
@@ -63,6 +66,23 @@ const ResolvePage = ({
       setIsResolving(false)
     })()
   }, [signer, contracts])
+
+  const onConnectAddressHandler = async () => {
+    if (!id || !signer || !contracts) return
+
+    const deployedAddress = contracts.HikyakuProtocol.address
+    const contract = HikyakuProtocol__factory.connect(deployedAddress, signer)
+    const resolvedAddress = await signer.getAddress()
+
+    console.log(requester, id, resolvedAddress)
+    try {
+      const tx = await contract.register(requester, id, resolvedAddress)
+      console.log('register tx', tx)
+      toast.success('Your address is registered!')
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   if (!id)
     return (
@@ -114,7 +134,7 @@ const ResolvePage = ({
                       <CenterBody tw="m-4">
                         <ConnectButton />
                         <div tw="my-4" />
-                        <Button colorScheme="blue" size="md">
+                        <Button colorScheme="blue" size="md" onClick={onConnectAddressHandler}>
                           Connect your web3 address to {id}
                         </Button>
                       </CenterBody>
@@ -147,6 +167,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       props: {
         isAuthenticated: true,
         givenId: payload.sub,
+        requester: payload.req,
       },
     }
   } else {
