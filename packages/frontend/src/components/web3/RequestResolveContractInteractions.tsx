@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Input,
+  Select,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -17,12 +18,29 @@ import 'twin.macro'
 
 import { useSigner } from 'wagmi'
 
+interface NotificationProvider {
+  label: string
+  value: string
+}
+
 export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
   const { data: signer } = useSigner()
   const { contracts } = useDeployments()
   const [isSending, setIsSending] = useState(false)
   const [hasSent, setHasSent] = useState(false)
   const [errorText, setErrorText] = useState<string | null>(null)
+
+  // TODO(knaoe): retrieve from contract
+  const notificationProviders: NotificationProvider[] = [
+    {
+      label: 'HikyakuNotificationProvider(First-party, Email turbo)',
+      value: 'hikyaku-turbo-notification-provider',
+    },
+    {
+      label: 'HikyakuNotificationProvider(First-party, Email normal)',
+      value: 'hikyaku-notification-provider',
+    },
+  ]
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -80,6 +98,16 @@ export const RequestResolveContractInteractions = ({ id }: { id: string }) => {
             <div tw="my-8" />
             <form onSubmit={onSubmit}>
               <Stack spacing={4}>
+                <Stack tw="mb-8" direction="row" spacing={4}>
+                  <Text>Notification provider</Text>
+                  <Select disabled>
+                    {notificationProviders.map((provider) => (
+                      <option key={provider.value} value={provider.value}>
+                        {provider.label}
+                      </option>
+                    ))}
+                  </Select>
+                </Stack>
                 <Input id="name" name="name" type="text" size="lg" placeholder="Your name" />
                 <Input
                   id="message"
