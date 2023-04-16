@@ -20,6 +20,7 @@ Made by [ken](https://twitter.com/kenichiNaoe), [Yoshi](https://twitter.com/yosh
 
 - [HiKyaku Protocol](#hikyaku-protocol)
     - [Live demo](#live-demo)
+  - [Authors](#authors)
   - [What problem we addressed](#what-problem-we-addressed)
   - [Protocol Spec](#protocol-spec)
     - [1. Register email address](#1-register-email-address)
@@ -90,6 +91,10 @@ Once the user's web3 address is registered, the email address can be resolved to
   - Styling: `chakra`, `tailwindcss`, `twin.macro`, `emotion`
 - Misc:
   - Linting & Formatting: `eslint`, `prettier`, `husky`, `lint-staged`
+- Blockchain (Can be deployed any EVM-compatible chains.)
+  - Polygon(Mumbai)
+    - [Link to Polygonscan for deployed contract](https://mumbai.polygonscan.com/address/0x774FBFD1478dCBC95A1D7d545C16e10bC756a648)
+  - Scroll
 
 ## Development
 
